@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Regex Test Cases | CovidCare Info Hub</title>
+    <style>
+      :root {
+        --blue-50: #f0f7ff;
+        --blue-600: #1565c0;
+        --blue-700: #0d4f9c;
+        --blue-900: #0b2a5b;
+        --green-600: #15803d;
+        --red-600: #b91c1c;
+        --slate-200: #e2e8f0;
+        --slate-500: #64748b;
+        --slate-600: #475569;
+        --slate-900: #0f172a;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.5;
+        color: var(--slate-900);
+        background: var(--blue-50);
+        padding: 40px 24px;
+      }
+      main { max-width: 1040px; margin: 0 auto; }
+      h1 { color: var(--blue-900); font-size: 2rem; margin: 0 0 8px; line-height: 1.2; }
+      p { margin: 0 0 16px; color: var(--slate-600); }
+      a { color: var(--blue-600); }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+        margin: 24px 0;
+      }
+      .run-button {
+        appearance: none;
+        border: 0;
+        border-radius: 999px;
+        background: var(--blue-600);
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        padding: 12px 24px;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.2s ease;
+      }
+      .run-button:hover { background: var(--blue-700); transform: translateY(-1px); }
+      .run-button:focus-visible { outline: 3px solid var(--blue-900); outline-offset: 2px; }
+      .summary { display: flex; flex-wrap: wrap; gap: 16px; }
+      .summary div {
+        background: #fff;
+        border: 1px solid var(--slate-200);
+        border-radius: 12px;
+        padding: 12px 20px;
+        min-width: 130px;
+      }
+      .summary strong { display: block; font-size: 1.5rem; color: var(--slate-900); }
+      .summary span { color: var(--slate-600); font-weight: 600; font-size: 0.9rem; }
+      .table-wrap {
+        background: #fff;
+        border: 1px solid var(--slate-200);
+        border-radius: 16px;
+        overflow-x: auto;
+      }
+      table { width: 100%; border-collapse: collapse; min-width: 720px; }
+      th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--slate-200); }
+      thead th { background: var(--blue-50); color: var(--blue-900); font-weight: 700; }
+      td code { font-family: Consolas, 'Courier New', monospace; font-size: 0.9rem; word-break: break-all; }
+      .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #fff;
+        background: var(--slate-500);
+      }
+      .pass { background: var(--green-600); }
+      .fail { background: var(--red-600); }
+      .back { display: inline-block; margin-top: 24px; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Regex test cases</h1>
+      <p>These 20 cases check the same patterns used by the registration, login and contact forms.</p>
+      <div class="toolbar">
+        <button type="button" class="run-button" id="run-tests">Run all tests</button>
+        <div class="summary" aria-live="polite">
+          <div><strong id="total">20</strong><span>Total</span></div>
+          <div><strong id="passed">0</strong><span>Passed</span></div>
+          <div><strong id="failed">0</strong><span>Failed</span></div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Field</th>
+              <th scope="col">Input</th>
+              <th scope="col">Expected</th>
+              <th scope="col">Actual</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody id="results"></tbody>
+        </table>
+      </div>
+      <a class="back" href="index.html">Back to the website</a>
+    </main>
+
+    <script>
+      const PATTERNS = {
+        name: /^[A-Za-z][A-Za-z.'\- ]{1,49}$/,
+        email: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/,
+        mobile: /^\+?[0-9]{10,15}$/,
+        password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s]).{8,64}$/,
+      };
+
+      const normalizeMobile = (value) => value.replace(/[\s()-]/g, '');
+
+      const TESTS = [
+        { field: 'Name', input: 'Anna Maria', expected: true, test: (v) => PATTERNS.name.test(v) },
+        { field: 'Name', input: 'A', expected: false, test: (v) => PATTERNS.name.test(v) },
+        { field: 'Name', input: 'John3', expected: false, test: (v) => PATTERNS.name.test(v) },
+        { field: 'Name', input: "O'Brien-Smith", expected: true, test: (v) => PATTERNS.name.test(v) },
+        { field: 'Email', input: 'jane.doe+covid@example.co.uk', expected: true, test: (v) => PATTERNS.email.test(v) },
+        { field: 'Email', input: 'jane@', expected: false, test: (v) => PATTERNS.email.test(v) },
+        { field: 'Email', input: 'jane@example', expected: false, test: (v) => PATTERNS.email.test(v) },
+        { field: 'Email', input: 'jane doe@example.com', expected: false, test: (v) => PATTERNS.email.test(v) },
+        { field: 'Mobile', input: '+1 (555) 123-4567', expected: true, test: (v) => PATTERNS.mobile.test(normalizeMobile(v)) },
+        { field: 'Mobile', input: '12345', expected: false, test: (v) => PATTERNS.mobile.test(normalizeMobile(v)) },
+        { field: 'Mobile', input: '0712345678', expected: true, test: (v) => PATTERNS.mobile.test(normalizeMobile(v)) },
+        { field: 'Mobile', input: '07123abc89', expected: false, test: (v) => PATTERNS.mobile.test(normalizeMobile(v)) },
+        { field: 'Password', input: 'Secret#123', expected: true, test: (v) => PATTERNS.password.test(v) },
+        { field: 'Password', input: 'password1!', expected: false, test: (v) => PATTERNS.password.test(v) },
+        { field: 'Password', input: 'PASSWORD1!', expected: false, test: (v) => PATTERNS.password.test(v) },
+        { field: 'Password', input: 'Password!!', expected: false, test: (v) => PATTERNS.password.test(v) },
+        { field: 'Password', input: 'Passw0rd', expected: false, test: (v) => PATTERNS.password.test(v) },
+        { field: 'Password', input: 'Ab1!', expected: false, test: (v) => PATTERNS.password.test(v) },
+        { field: 'Password', input: 'Strong@2026', expected: true, test: (v) => PATTERNS.password.test(v) },
+        { field: 'Password', input: `Aa1!${'a'.repeat(61)}`, expected: false, test: (v) => PATTERNS.password.test(v) },
+      ];
+
+      const resultsBody = document.getElementById('results');
+      const runButton = document.getElementById('run-tests');
+      const passedCount = document.getElementById('passed');
+      const failedCount = document.getElementById('failed');
+
+      const displayInput = (text) => (text.length > 40 ? `${text.slice(0, 40)}...` : text);
+      const describe = (value) => (value ? 'Valid' : 'Invalid');
+
+      const createCell = (content) => {
+        const cell = document.createElement('td');
+        if (content instanceof Node) {
+          cell.append(content);
+        } else {
+          cell.textContent = content;
+        }
+        return cell;
+      };
+
+      const renderRows = () => {
+        resultsBody.replaceChildren();
+        TESTS.forEach((item, index) => {
+          const code = document.createElement('code');
+          code.textContent = displayInput(item.input);
+          const row = document.createElement('tr');
+          row.dataset.index = String(index);
+          row.append(
+            createCell(String(index + 1)),
+            createCell(item.field),
+            createCell(code),
+            createCell(describe(item.expected)),
+            createCell('-'),
+            createCell(statusBadge('Not run', ''))
+          );
+          resultsBody.append(row);
+        });
+      };
+
+      const statusBadge = (label, className) => {
+        const badge = document.createElement('span');
+        badge.className = `badge ${className}`.trim();
+        badge.textContent = label;
+        return badge;
+      };
+
+      const runAllTests = () => {
+        let passed = 0;
+        const rows = resultsBody.querySelectorAll('tr');
+        TESTS.forEach((item, index) => {
+          const actual = item.test(item.input);
+          const ok = actual === item.expected;
+          if (ok) passed += 1;
+          const cells = rows[index].children;
+          cells[4].textContent = describe(actual);
+          cells[5].replaceChildren(statusBadge(ok ? 'PASS' : 'FAIL', ok ? 'pass' : 'fail'));
+        });
+        passedCount.textContent = passed;
+        failedCount.textContent = TESTS.length - passed;
+      };
+
+      runButton.addEventListener('click', runAllTests);
+      renderRows();
+    </script>
+  </body>
+</html>

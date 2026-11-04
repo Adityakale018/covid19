@@ -1,0 +1,1348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="CovidCare Info Hub: COVID-19 awareness, symptoms, prevention, statistics, and community support." />
+    <title>CovidCare Info Hub</title>
+    <style>
+      :root {
+        --blue-50: #f0f7ff;
+        --blue-100: #dbeafe;
+        --blue-200: #bfdbfe;
+        --blue-500: #2563eb;
+        --blue-600: #1565c0;
+        --blue-700: #0d47a1;
+        --blue-900: #0b2a5b;
+        --green-600: #15803d;
+        --amber-600: #b45309;
+        --red-600: #b91c1c;
+        --white: #ffffff;
+        --slate-200: #e2e8f0;
+        --slate-400: #94a3b8;
+        --slate-600: #475569;
+        --slate-800: #1e293b;
+        --slate-900: #0f172a;
+        --radius: 16px;
+        --radius-sm: 10px;
+        --shadow: 0 10px 30px rgba(13, 71, 161, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--slate-800);
+        background: var(--white);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      h1, h2, h3 { color: var(--slate-900); font-weight: 700; line-height: 1.2; margin: 0 0 16px; }
+      h1 { font-size: clamp(2rem, 4vw, 2.75rem); }
+      h2 { font-size: 1.5rem; }
+      h3 { font-size: 1.125rem; }
+      p { margin: 0 0 16px; }
+      a { color: var(--blue-600); text-decoration: none; transition: color 0.2s ease; }
+      a:hover { color: var(--blue-700); text-decoration: underline; }
+      :focus-visible { outline: 3px solid var(--blue-500); outline-offset: 2px; }
+      [hidden] { display: none !important; }
+
+      /* Header and navigation */
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--white);
+        border-bottom: 1px solid var(--slate-200);
+      }
+      .nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        color: var(--blue-700);
+        font-size: 1.05rem;
+      }
+      .brand:hover { color: var(--blue-600); text-decoration: none; }
+      .brand-mark {
+        display: inline-grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--blue-600);
+        color: var(--white);
+        font-size: 1.3rem;
+        line-height: 1;
+      }
+      .nav-toggle {
+        display: none;
+        position: relative;
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--slate-200);
+        border-radius: var(--radius-sm);
+        background: var(--white);
+        cursor: pointer;
+      }
+      .nav-toggle span,
+      .nav-toggle span::before,
+      .nav-toggle span::after {
+        position: absolute;
+        left: 12px;
+        width: 20px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--slate-800);
+        content: '';
+        transition: transform 0.2s ease, background 0.2s ease;
+      }
+      .nav-toggle span { top: 50%; }
+      .nav-toggle span::before { top: -6px; left: 0; }
+      .nav-toggle span::after { top: 6px; left: 0; }
+      .nav.is-open .nav-toggle span { background: transparent; }
+      .nav.is-open .nav-toggle span::before { transform: translateY(6px) rotate(45deg); }
+      .nav.is-open .nav-toggle span::after { transform: translateY(-6px) rotate(-45deg); }
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 16px;
+        flex: 1;
+        flex-wrap: wrap;
+      }
+      .nav-links { display: flex; flex-wrap: wrap; gap: 4px; }
+      .nav-link {
+        padding: 8px 12px;
+        border-radius: 999px;
+        color: var(--slate-600);
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      .nav-link:hover { background: var(--blue-50); color: var(--blue-700); text-decoration: none; }
+      .nav-link.is-active { background: var(--blue-100); color: var(--blue-700); }
+      .nav-account { display: flex; align-items: center; gap: 8px; }
+      .nav-user { color: var(--slate-600); font-weight: 600; font-size: 0.95rem; margin-right: 4px; }
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        border: 2px solid transparent;
+        border-radius: 999px;
+        font: inherit;
+        font-weight: 600;
+        font-size: 1rem;
+        line-height: 1.2;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+      }
+      .btn:hover { transform: translateY(-1px); text-decoration: none; }
+      .btn:active { transform: translateY(0); }
+      .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+      .btn-primary { background: var(--blue-600); color: var(--white); box-shadow: 0 6px 16px rgba(21, 101, 192, 0.25); }
+      .btn-primary:hover { background: var(--blue-700); color: var(--white); }
+      .btn-outline { background: var(--white); border-color: var(--blue-600); color: var(--blue-700); }
+      .btn-outline:hover { background: var(--blue-50); color: var(--blue-700); }
+      .btn-sm { padding: 8px 16px; font-size: 0.9rem; }
+      .btn-block { width: 100%; }
+
+      /* Layout */
+      .page {
+        flex: 1;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px 64px;
+      }
+      section[data-page] { animation: fade-in 0.4s ease; }
+      @keyframes fade-in {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .section { padding: 40px 0; }
+      .section-head { margin-bottom: 24px; }
+      .section-head p { color: var(--slate-600); margin: 0; }
+      .eyebrow {
+        display: inline-block;
+        color: var(--blue-600);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .lead { font-size: 1.125rem; color: var(--slate-600); max-width: 680px; }
+      .note { font-size: 0.9rem; color: var(--slate-600); }
+      .page-hero { padding: 56px 0 24px; max-width: 760px; }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 48px;
+        align-items: center;
+        padding: 64px 0 40px;
+      }
+      .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+      .hero-panel {
+        background: linear-gradient(160deg, var(--blue-600), var(--blue-700));
+        color: var(--white);
+        border-radius: var(--radius);
+        padding: 32px;
+        box-shadow: var(--shadow);
+        animation: float 6s ease-in-out infinite;
+      }
+      .hero-panel h2 { color: var(--white); font-size: 1.3rem; }
+      .tip-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+      .tip-list li { display: flex; gap: 12px; align-items: flex-start; }
+      .tip-list span {
+        flex: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--white);
+        color: var(--blue-700);
+        font-weight: 700;
+        display: grid;
+        place-items: center;
+        font-size: 0.9rem;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+      .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 24px; }
+      .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+      .two-col, .split { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+      .card {
+        display: block;
+        background: var(--white);
+        border: 1px solid var(--slate-200);
+        border-radius: var(--radius);
+        padding: 28px;
+        color: var(--slate-800);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      }
+      .card p { color: var(--slate-600); margin: 0; }
+      .card-link:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--blue-200); text-decoration: none; }
+      .card-icon {
+        display: inline-grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--blue-100);
+        color: var(--blue-700);
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 16px;
+      }
+      .card-alert { background: #fff5f5; border-color: #fecaca; }
+      .cta-band {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+        background: var(--blue-50);
+        border: 1px solid var(--blue-100);
+        border-radius: var(--radius);
+        padding: 32px;
+      }
+      .cta-band p { color: var(--slate-600); margin: 0; }
+      .cta-band h2 { margin-bottom: 8px; }
+      .callout {
+        background: var(--blue-50);
+        border-left: 6px solid var(--blue-600);
+        border-radius: var(--radius);
+        padding: 28px 32px;
+      }
+      .callout p { color: var(--slate-600); margin: 0; }
+      .callout-success { background: #f0fdf4; border-left-color: var(--green-600); }
+      .notice { border-radius: var(--radius-sm); padding: 16px 20px; background: var(--blue-50); }
+      .notice-error { background: #fef2f2; }
+      .check-list, .step-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+      .check-list li { position: relative; padding-left: 28px; }
+      .check-list li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--blue-500);
+      }
+      .check-list-alert li::before { background: var(--red-600); }
+      .step-list { list-style: decimal; padding-left: 24px; }
+      .step-list li { padding-left: 4px; }
+
+      /* Symptom checker */
+      .checker-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border: 1.5px solid var(--slate-200);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: border-color 0.2s ease, background 0.2s ease;
+      }
+      .checker-option:hover { border-color: var(--blue-200); background: var(--blue-50); }
+      .checker-option input { width: 18px; height: 18px; accent-color: var(--blue-600); }
+      .checker-result { font-weight: 600; margin: 16px 0 0; }
+
+      /* Statistics dashboard */
+      .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 20px; }
+      .stat-card {
+        background: var(--white);
+        border: 1px solid var(--slate-200);
+        border-top: 5px solid var(--blue-600);
+        border-radius: var(--radius);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+      .stat-green { border-top-color: var(--green-600); }
+      .stat-red { border-top-color: var(--red-600); }
+      .stat-amber { border-top-color: var(--amber-600); }
+      .stat-label { color: var(--slate-600); font-weight: 600; font-size: 0.95rem; }
+      .stat-value { font-size: 1.9rem; color: var(--slate-900); line-height: 1.2; font-weight: 700; }
+      .panel {
+        background: var(--white);
+        border: 1px solid var(--slate-200);
+        border-radius: var(--radius);
+        padding: 28px;
+      }
+      .chart {
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+        height: 260px;
+        padding-top: 8px;
+      }
+      .bar-col {
+        flex: 1;
+        height: 100%;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+      }
+      .bar {
+        width: 100%;
+        max-width: 56px;
+        min-height: 4px;
+        border-radius: 8px 8px 4px 4px;
+        background: linear-gradient(180deg, var(--blue-500), var(--blue-700));
+        transition: opacity 0.2s ease;
+      }
+      .bar:hover { opacity: 0.8; }
+      .bar-value, .bar-label { font-size: 0.8rem; color: var(--slate-600); }
+      .table-wrap { overflow-x: auto; }
+      .data-table { width: 100%; border-collapse: collapse; min-width: 480px; }
+      .data-table th, .data-table td {
+        text-align: left;
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--slate-200);
+      }
+      .data-table thead th { color: var(--blue-900); background: var(--blue-50); font-weight: 700; }
+      .data-table tbody th { font-weight: 600; color: var(--slate-900); }
+      .progress {
+        display: inline-block;
+        vertical-align: middle;
+        width: 120px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--blue-100);
+        overflow: hidden;
+        margin-right: 8px;
+      }
+      .progress span { display: block; height: 100%; background: var(--blue-600); border-radius: 999px; }
+
+      /* Comments */
+      .comment-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+      .comment {
+        background: var(--white);
+        border: 1px solid var(--slate-200);
+        border-radius: var(--radius-sm);
+        padding: 20px 24px;
+      }
+      .comment p { margin: 8px 0 0; overflow-wrap: anywhere; }
+      .comment-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 0.9rem; }
+      .comment-meta time { color: var(--slate-600); }
+
+      /* Forms */
+      .form-card {
+        background: var(--white);
+        border: 1px solid var(--slate-200);
+        border-radius: var(--radius);
+        padding: 32px;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .form-narrow { max-width: 560px; margin: 0 auto; width: 100%; }
+      .auth-wrap { padding: 48px 0; }
+      .field { display: flex; flex-direction: column; gap: 6px; }
+      .field label { font-weight: 600; color: var(--slate-900); }
+      .field input, .field textarea {
+        font: inherit;
+        padding: 12px 14px;
+        border: 1.5px solid var(--slate-400);
+        border-radius: var(--radius-sm);
+        background: var(--white);
+        color: var(--slate-900);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      .field textarea { resize: vertical; min-height: 120px; }
+      .field input:focus, .field textarea:focus {
+        outline: none;
+        border-color: var(--blue-600);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+      }
+      .field input[aria-invalid='true'], .field textarea[aria-invalid='true'] {
+        border-color: var(--red-600);
+        background: #fef2f2;
+      }
+      .field-hint { font-size: 0.85rem; color: var(--slate-600); }
+      .field-error { font-size: 0.875rem; color: var(--red-600); font-weight: 600; }
+      .field-error:empty { display: none; }
+      .form-status { margin: 0; font-weight: 600; }
+      .form-status:empty { display: none; }
+      .form-status[data-type='error'] { color: var(--red-600); }
+      .form-status[data-type='success'] { color: var(--green-600); }
+      .auth-switch { text-align: center; color: var(--slate-600); margin: 0; }
+      .split-layout { display: grid; gap: 32px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+      /* Footer */
+      .site-footer { background: var(--blue-900); color: var(--blue-100); padding: 48px 24px 24px; }
+      .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 32px;
+      }
+      .footer-brand p { color: var(--blue-200); margin: 16px 0 0; max-width: 320px; }
+      .footer-brand .brand { color: var(--white); }
+      .footer-col { display: flex; flex-direction: column; gap: 10px; }
+      .footer-col h2 { color: var(--white); font-size: 1rem; margin-bottom: 4px; }
+      .footer-col a { color: var(--blue-100); }
+      .footer-col a:hover { color: var(--white); }
+      .footer-note {
+        max-width: 1200px;
+        margin: 32px auto 0;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        font-size: 0.875rem;
+        color: var(--blue-200);
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .hero { grid-template-columns: 1fr; padding-top: 40px; }
+        .footer-inner { grid-template-columns: 1fr 1fr; }
+        .footer-brand { grid-column: 1 / -1; }
+      }
+      @media (max-width: 768px) {
+        .nav { padding: 12px 16px; }
+        .nav-toggle { display: block; }
+        .nav-menu {
+          display: none;
+          width: 100%;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 12px;
+          padding-top: 12px;
+          border-top: 1px solid var(--slate-200);
+        }
+        .nav.is-open .nav-menu { display: flex; }
+        .nav-links { flex-direction: column; }
+        .nav-account { justify-content: space-between; flex-wrap: wrap; }
+        .page { padding: 0 16px 48px; }
+        .cta-band, .callout, .panel, .card, .form-card { padding: 24px; }
+        .chart { gap: 6px; height: 220px; }
+        .bar-value { display: none; }
+        .footer-inner { grid-template-columns: 1fr; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+        html { scroll-behavior: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" id="nav" aria-label="Main navigation">
+        <a href="#/home" class="brand"><span class="brand-mark" aria-hidden="true">+</span><span>CovidCare Info Hub</span></a>
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu"><span></span></button>
+        <div class="nav-menu" id="nav-menu">
+          <div class="nav-links">
+            <a href="#/home" class="nav-link" data-link="home">Home</a>
+            <a href="#/symptoms" class="nav-link" data-link="symptoms">Symptoms</a>
+            <a href="#/prevention" class="nav-link" data-link="prevention">Prevention</a>
+            <a href="#/statistics" class="nav-link" data-link="statistics">Statistics</a>
+            <a href="#/comments" class="nav-link" data-link="comments">Community</a>
+            <a href="#/contact" class="nav-link" data-link="contact">Contact</a>
+            <a href="regex-tests.html" class="nav-link">Regex Test Cases</a>
+          </div>
+          <div class="nav-account" id="nav-account"></div>
+        </div>
+      </nav>
+    </header>
+
+    <main id="app" class="page">
+      <!-- Home -->
+      <section data-page="home">
+        <div class="hero">
+          <div>
+            <span class="eyebrow">COVID-19 awareness</span>
+            <h1>Clear, trusted guidance to help you stay healthy</h1>
+            <p class="lead">Understand how COVID-19 spreads, recognize the symptoms, follow simple prevention steps, and review the latest figures in one place.</p>
+            <div class="hero-actions">
+              <a href="#/symptoms" class="btn btn-primary">Check symptoms</a>
+              <a href="#/prevention" class="btn btn-outline">Prevention guide</a>
+            </div>
+          </div>
+          <aside class="hero-panel" aria-label="Key protection tips">
+            <h2>Five daily protection habits</h2>
+            <ul class="tip-list">
+              <li><span>1</span> Stay up to date with vaccines and boosters</li>
+              <li><span>2</span> Improve airflow in shared indoor spaces</li>
+              <li><span>3</span> Wash hands regularly for at least 20 seconds</li>
+              <li><span>4</span> Wear a well-fitting mask in crowded places</li>
+              <li><span>5</span> Stay home and test when you feel unwell</li>
+            </ul>
+          </aside>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h2>About COVID-19</h2>
+            <p>The essentials everyone should know.</p>
+          </div>
+          <div class="info-grid">
+            <article class="card">
+              <h3>What it is</h3>
+              <p>COVID-19 is an infectious respiratory disease caused by the SARS-CoV-2 coronavirus. It was first identified in late 2019.</p>
+            </article>
+            <article class="card">
+              <h3>How it spreads</h3>
+              <p>The virus spreads mainly through tiny respiratory droplets and aerosols when people are close together, especially indoors.</p>
+            </article>
+            <article class="card">
+              <h3>Incubation period</h3>
+              <p>Symptoms usually appear between 2 and 14 days after exposure. Some people spread the virus without feeling ill.</p>
+            </article>
+            <article class="card">
+              <h3>Who is most at risk</h3>
+              <p>Older adults and people with heart disease, diabetes, chronic lung disease, or weakened immune systems face higher risk of severe illness.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="cta-band">
+            <div>
+              <h2>Have a question or a story to share?</h2>
+              <p>Send us a message or join the community conversation.</p>
+            </div>
+            <div class="hero-actions">
+              <a href="#/contact" class="btn btn-primary">Contact us</a>
+              <a href="#/comments" class="btn btn-outline">Join the discussion</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Symptoms -->
+      <section data-page="symptoms" hidden>
+        <div class="page-hero">
+          <span class="eyebrow">Know the signs</span>
+          <h1>COVID-19 symptoms</h1>
+          <p class="lead">Symptoms range from mild to severe and can look like a cold or flu. If you notice several signs, consider testing and staying home.</p>
+        </div>
+        <div class="section">
+          <div class="two-col">
+            <article class="card">
+              <h2>Common symptoms</h2>
+              <ul class="check-list">
+                <li>Fever or chills</li>
+                <li>Cough</li>
+                <li>Shortness of breath or difficulty breathing</li>
+                <li>Fatigue and muscle or body aches</li>
+                <li>Headache</li>
+                <li>Loss of taste or smell</li>
+                <li>Sore throat and congestion</li>
+                <li>Nausea, vomiting, or diarrhea</li>
+              </ul>
+            </article>
+            <article class="card card-alert">
+              <h2>Emergency warning signs</h2>
+              <p>Get medical help right away if you or someone with you has:</p>
+              <ul class="check-list check-list-alert">
+                <li>Trouble breathing or breathlessness at rest</li>
+                <li>Persistent pain or pressure in the chest</li>
+                <li>New confusion or difficulty staying awake</li>
+                <li>Bluish lips or face</li>
+              </ul>
+              <p class="note">Call your local emergency number. Do not wait for test results.</p>
+            </article>
+          </div>
+        </div>
+        <div class="section">
+          <div class="panel">
+            <h2>Quick symptom check</h2>
+            <p class="note">Tick any symptoms you currently have. This is general guidance, not a diagnosis.</p>
+            <form id="symptom-checker" class="checker-form">
+              <div class="info-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 20px;">
+                <label class="checker-option"><input type="checkbox" name="symptom" value="2" /> Fever or chills</label>
+                <label class="checker-option"><input type="checkbox" name="symptom" value="1" /> Cough</label>
+                <label class="checker-option"><input type="checkbox" name="symptom" value="3" /> Shortness of breath</label>
+                <label class="checker-option"><input type="checkbox" name="symptom" value="1" /> Fatigue or body aches</label>
+                <label class="checker-option"><input type="checkbox" name="symptom" value="1" /> Loss of taste or smell</label>
+                <label class="checker-option"><input type="checkbox" name="symptom" value="1" /> Sore throat or congestion</label>
+              </div>
+              <button type="submit" class="btn btn-primary">Check my symptoms</button>
+              <p class="checker-result" id="checker-result" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+        <div class="section">
+          <div class="callout">
+            <h2>What to do if you feel unwell</h2>
+            <ol class="step-list">
+              <li>Stay home and rest, away from others where you can.</li>
+              <li>Take a COVID-19 test as soon as possible.</li>
+              <li>Contact a healthcare provider, especially if you are at higher risk.</li>
+              <li>Wear a well-fitting mask around others and wash your hands often.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- Prevention -->
+      <section data-page="prevention" hidden>
+        <div class="page-hero">
+          <span class="eyebrow">Stay protected</span>
+          <h1>Prevention guidelines</h1>
+          <p class="lead">Simple everyday habits reduce the chance of catching and spreading COVID-19, especially when combined.</p>
+        </div>
+        <div class="section">
+          <div class="card-grid">
+            <article class="card"><span class="card-icon">v</span><h3>Get vaccinated</h3><p>Stay up to date with recommended vaccines and boosters to lower your risk of severe illness.</p></article>
+            <article class="card"><span class="card-icon">~</span><h3>Improve ventilation</h3><p>Open windows and use air filters indoors. Fresh air quickly dilutes airborne virus.</p></article>
+            <article class="card"><span class="card-icon">m</span><h3>Wear a mask</h3><p>Use a well-fitting mask in crowded or poorly ventilated spaces and around people who are unwell.</p></article>
+            <article class="card"><span class="card-icon">w</span><h3>Wash your hands</h3><p>Clean your hands with soap and water for at least 20 seconds, or use an alcohol-based rub.</p></article>
+            <article class="card"><span class="card-icon">c</span><h3>Cover your cough</h3><p>Cough or sneeze into a tissue or your elbow, then wash your hands.</p></article>
+            <article class="card"><span class="card-icon">h</span><h3>Stay home when sick</h3><p>Keep your distance from others while you have symptoms, and test if you are unsure.</p></article>
+          </div>
+        </div>
+        <div class="section">
+          <div class="callout callout-success">
+            <h2>Protect people at higher risk</h2>
+            <p>Before visiting older relatives or friends with health conditions, consider testing, wearing a mask, and meeting in well-ventilated spaces.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Statistics -->
+      <section data-page="statistics" hidden>
+        <div class="page-hero">
+          <span class="eyebrow">Dashboard</span>
+          <h1>COVID-19 statistics</h1>
+          <p class="lead">An overview of case, recovery, and vaccination figures. The numbers shown are sample data for demonstration.</p>
+        </div>
+        <div class="section">
+          <div class="stats-grid" id="stat-cards"></div>
+        </div>
+        <div class="section">
+          <div class="panel">
+            <div class="section-head">
+              <h2>Weekly new cases</h2>
+              <p>Sample figures for the last eight weeks.</p>
+            </div>
+            <div class="chart" id="weekly-chart" role="img" aria-label="Bar chart of weekly new cases"></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="panel">
+            <div class="section-head">
+              <h2>Regional overview</h2>
+              <p>Totals and vaccination coverage by region.</p>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr><th scope="col">Region</th><th scope="col">Cases</th><th scope="col">Deaths</th><th scope="col">Vaccinated</th></tr>
+                </thead>
+                <tbody id="region-rows"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comments -->
+      <section data-page="comments" hidden>
+        <div class="page-hero">
+          <span class="eyebrow">Community</span>
+          <h1>Comments</h1>
+          <p class="lead">Share experiences, ask questions, and support one another. Please keep discussions respectful and avoid sharing personal medical details.</p>
+        </div>
+        <div class="section split-layout">
+          <div id="composer"></div>
+          <div>
+            <h2>Latest comments</h2>
+            <div id="comment-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section data-page="contact" hidden>
+        <div class="page-hero">
+          <span class="eyebrow">We are listening</span>
+          <h1>Contact us</h1>
+          <p class="lead">Questions about COVID-19 or this website? Send us a message and we will get back to you.</p>
+        </div>
+        <div class="section">
+          <form id="contact-form" class="form-card form-narrow" novalidate>
+            <div class="field">
+              <label for="contact-name">Full name</label>
+              <input id="contact-name" name="fullName" type="text" autocomplete="name" />
+              <span class="field-error" data-error-for="fullName"></span>
+            </div>
+            <div class="field">
+              <label for="contact-email">Email address</label>
+              <input id="contact-email" name="email" type="email" autocomplete="email" />
+              <span class="field-error" data-error-for="email"></span>
+            </div>
+            <div class="field">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" name="message" rows="6"></textarea>
+              <span class="field-error" data-error-for="message"></span>
+            </div>
+            <p class="form-status" role="alert"></p>
+            <button type="submit" class="btn btn-primary">Send message</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Login -->
+      <section data-page="login" hidden>
+        <div class="auth-wrap">
+          <form id="login-form" class="form-card form-narrow" novalidate>
+            <h1>Log in</h1>
+            <p class="lead">Welcome back. Log in to join the community conversation.</p>
+            <div class="field">
+              <label for="login-email">Email address</label>
+              <input id="login-email" name="email" type="email" autocomplete="email" />
+              <span class="field-error" data-error-for="email"></span>
+            </div>
+            <div class="field">
+              <label for="login-password">Password</label>
+              <input id="login-password" name="password" type="password" autocomplete="current-password" />
+              <span class="field-error" data-error-for="password"></span>
+            </div>
+            <p class="form-status" role="alert"></p>
+            <button type="submit" class="btn btn-primary btn-block">Log in</button>
+            <p class="auth-switch">New here? <a href="#/register">Create an account</a></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- Register -->
+      <section data-page="register" hidden>
+        <div class="auth-wrap">
+          <form id="register-form" class="form-card form-narrow" novalidate>
+            <h1>Create your account</h1>
+            <p class="lead">Join the community and share your comments.</p>
+            <div class="field">
+              <label for="register-name">Full name</label>
+              <input id="register-name" name="fullName" type="text" autocomplete="name" />
+              <span class="field-error" data-error-for="fullName"></span>
+            </div>
+            <div class="field">
+              <label for="register-email">Email address</label>
+              <input id="register-email" name="email" type="email" autocomplete="email" />
+              <span class="field-error" data-error-for="email"></span>
+            </div>
+            <div class="field">
+              <label for="register-mobile">Mobile number</label>
+              <input id="register-mobile" name="mobile" type="tel" autocomplete="tel" />
+              <span class="field-error" data-error-for="mobile"></span>
+            </div>
+            <div class="field">
+              <label for="register-password">Password</label>
+              <input id="register-password" name="password" type="password" autocomplete="new-password" />
+              <span class="field-hint">8 or more characters, with uppercase, lowercase, a number, and a symbol.</span>
+              <span class="field-error" data-error-for="password"></span>
+            </div>
+            <div class="field">
+              <label for="register-confirm">Confirm password</label>
+              <input id="register-confirm" name="confirmPassword" type="password" autocomplete="new-password" />
+              <span class="field-error" data-error-for="confirmPassword"></span>
+            </div>
+            <p class="form-status" role="alert"></p>
+            <button type="submit" class="btn btn-primary btn-block">Create account</button>
+            <p class="auth-switch">Already registered? <a href="#/login">Log in</a></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="#/home" class="brand"><span class="brand-mark" aria-hidden="true">+</span><span>CovidCare Info Hub</span></a>
+          <p>Trusted COVID-19 awareness, prevention guidance, and community support.</p>
+        </div>
+        <div class="footer-col">
+          <h2>Explore</h2>
+          <a href="#/symptoms">Symptoms</a>
+          <a href="#/prevention">Prevention</a>
+          <a href="#/statistics">Statistics</a>
+        </div>
+        <div class="footer-col">
+          <h2>Community</h2>
+          <a href="#/comments">Comments</a>
+          <a href="#/contact">Contact us</a>
+          <a href="regex-tests.html">Regex Test Cases</a>
+          <a href="#/login">Log in</a>
+          <a href="#/register">Create account</a>
+        </div>
+      </div>
+      <p class="footer-note">For general information only. This site does not replace advice from a doctor or health authority. In an emergency, call your local emergency number.</p>
+    </footer>
+
+    <script>
+      // 'local' keeps data in this browser (preview). 'api' uses the PHP + MySQL backend in api/index.php (XAMPP).
+      const DATA_MODE = 'local';
+      const API_URL = 'api/index.php';
+
+      const KEYS = {
+        users: 'covidhub.users',
+        session: 'covidhub.session',
+        comments: 'covidhub.comments',
+        contacts: 'covidhub.contacts',
+      };
+
+      const SEED_COMMENTS = [
+        { id: 1, fullName: 'Maria Lopez', body: 'Getting vaccinated and boosted helped me feel much more confident visiting my parents this winter.', createdAt: '2026-10-28T09:30:00.000Z' },
+        { id: 2, fullName: 'David Chen', body: 'Opening windows during our team meetings has made the office feel fresher. Simple and effective.', createdAt: '2026-10-30T14:10:00.000Z' },
+        { id: 3, fullName: 'Aisha Patel', body: 'The symptoms page helped me decide when to get tested. Clear guidance when you need it most.', createdAt: '2026-11-01T18:45:00.000Z' },
+      ];
+
+      const SAMPLE_STATS = {
+        totals: [
+          { label: 'Total cases', value: 12480350, tone: '' },
+          { label: 'Total recovered', value: 11903420, tone: 'stat-green' },
+          { label: 'Total deaths', value: 224180, tone: 'stat-red' },
+          { label: 'Active cases', value: 352750, tone: 'stat-amber' },
+        ],
+        weekly: [
+          { week: 'Week 1', cases: 182000 },
+          { week: 'Week 2', cases: 214000 },
+          { week: 'Week 3', cases: 256000 },
+          { week: 'Week 4', cases: 231000 },
+          { week: 'Week 5', cases: 198000 },
+          { week: 'Week 6', cases: 175000 },
+          { week: 'Week 7', cases: 163000 },
+          { week: 'Week 8', cases: 149000 },
+        ],
+        regions: [
+          { name: 'North America', cases: 3120440, deaths: 52110, vaccinated: 68 },
+          { name: 'Europe', cases: 3985210, deaths: 71890, vaccinated: 74 },
+          { name: 'Asia', cases: 3540870, deaths: 61230, vaccinated: 71 },
+          { name: 'South America', cases: 1190460, deaths: 27560, vaccinated: 62 },
+          { name: 'Africa', cases: 643370, deaths: 11290, vaccinated: 45 },
+        ],
+      };
+
+      const PATTERNS = {
+        name: /^[A-Za-z][A-Za-z.'\- ]{1,49}$/,
+        email: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/,
+        mobile: /^\+?[0-9]{10,15}$/,
+        password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s]).{8,64}$/,
+      };
+
+      const normalizeEmail = (value) => value.trim().toLowerCase();
+      const normalizeMobile = (value) => value.replace(/[\s()-]/g, '');
+
+      const RULES = {
+        fullName: {
+          test: (v) => PATTERNS.name.test(v),
+          message: 'Enter 2 to 50 letters. Spaces, apostrophes, hyphens, and periods are allowed.',
+        },
+        email: {
+          test: (v) => PATTERNS.email.test(v),
+          message: 'Enter a valid email address, such as name@example.com.',
+        },
+        mobile: {
+          test: (v) => PATTERNS.mobile.test(normalizeMobile(v)),
+          message: 'Enter 10 to 15 digits. You may start with + and use spaces or dashes.',
+        },
+        password: {
+          test: (v) => PATTERNS.password.test(v),
+          message: 'Use 8 or more characters with an uppercase letter, a lowercase letter, a number, and a symbol.',
+        },
+        message: {
+          test: (v) => v.length >= 10 && v.length <= 1000,
+          message: 'Message must be between 10 and 1000 characters.',
+        },
+        comment: {
+          test: (v) => v.length >= 2 && v.length <= 500,
+          message: 'Comment must be between 2 and 500 characters.',
+        },
+      };
+
+      function validate(values) {
+        const errors = {};
+        for (const [field, raw] of Object.entries(values)) {
+          const value = typeof raw === 'string' ? raw.trim() : raw;
+          if (!RULES[field].test(value)) errors[field] = RULES[field].message;
+        }
+        return errors;
+      }
+
+      // Storage and data layer
+      const encoder = new TextEncoder();
+
+      function read(key, fallback) {
+        try {
+          return JSON.parse(localStorage.getItem(key)) ?? fallback;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function write(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+
+      function toHex(buffer) {
+        return [...new Uint8Array(buffer)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+      }
+
+      async function hashPassword(password, salt) {
+        return toHex(await crypto.subtle.digest('SHA-256', encoder.encode(salt + password)));
+      }
+
+      const localData = {
+        async getSession() {
+          return read(KEYS.session, null);
+        },
+        async register({ fullName, email, mobile, password }) {
+          const users = read(KEYS.users, []);
+          if (users.some((user) => user.email === email)) {
+            throw new Error('An account with this email already exists. Try logging in instead.');
+          }
+          const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
+          const user = { id: Date.now(), fullName, email, mobile, salt, passwordHash: await hashPassword(password, salt) };
+          write(KEYS.users, [...users, user]);
+          const session = { id: user.id, fullName: user.fullName };
+          write(KEYS.session, session);
+          return session;
+        },
+        async login({ email, password }) {
+          const user = read(KEYS.users, []).find((entry) => entry.email === email);
+          if (!user || (await hashPassword(password, user.salt)) !== user.passwordHash) {
+            throw new Error('Incorrect email or password.');
+          }
+          const session = { id: user.id, fullName: user.fullName };
+          write(KEYS.session, session);
+          return session;
+        },
+        async logout() {
+          localStorage.removeItem(KEYS.session);
+        },
+        async listComments() {
+          return read(KEYS.comments, SEED_COMMENTS);
+        },
+        async addComment(body) {
+          const session = read(KEYS.session, null);
+          if (!session) throw new Error('Please log in to post a comment.');
+          const comment = { id: Date.now(), fullName: session.fullName, body, createdAt: new Date().toISOString() };
+          write(KEYS.comments, [comment, ...read(KEYS.comments, SEED_COMMENTS)]);
+          return comment;
+        },
+        async sendContact(values) {
+          write(KEYS.contacts, [...read(KEYS.contacts, []), { ...values, createdAt: new Date().toISOString() }]);
+        },
+      };
+
+      async function request(action, { method = 'GET', body } = {}) {
+        const response = await fetch(`${API_URL}?action=${action}`, {
+          method,
+          credentials: 'same-origin',
+          headers: body ? { 'Content-Type': 'application/json' } : {},
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        const json = await response.json().catch(() => null);
+        if (!response.ok || !json?.ok) {
+          throw new Error(json?.error ?? 'Something went wrong. Please try again.');
+        }
+        return json.data;
+      }
+
+      const apiData = {
+        getSession: () => request('session'),
+        register: (values) => request('register', { method: 'POST', body: values }),
+        login: (values) => request('login', { method: 'POST', body: values }),
+        logout: () => request('logout', { method: 'POST' }),
+        listComments: () => request('comments'),
+        addComment: (body) => request('add_comment', { method: 'POST', body: { body } }),
+        sendContact: (values) => request('contact', { method: 'POST', body: values }),
+      };
+
+      const data = DATA_MODE === 'api' ? apiData : localData;
+
+      // DOM helpers
+      function el(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        return node;
+      }
+
+      function showFieldErrors(form, errors) {
+        form.querySelectorAll('[data-error-for]').forEach((node) => {
+          const field = node.dataset.errorFor;
+          node.textContent = errors[field] ?? '';
+          const input = form.elements.namedItem(field);
+          if (input) input.setAttribute('aria-invalid', errors[field] ? 'true' : 'false');
+        });
+      }
+
+      function setStatus(form, message, type = 'error') {
+        const status = form.querySelector('.form-status');
+        status.textContent = message;
+        status.dataset.type = type;
+      }
+
+      function setBusy(button, busy) {
+        button.disabled = busy;
+      }
+
+      // Navigation and routing
+      const PAGES = ['home', 'symptoms', 'prevention', 'statistics', 'comments', 'contact', 'login', 'register'];
+      const nav = document.getElementById('nav');
+      const navToggle = document.getElementById('nav-toggle');
+
+      navToggle.addEventListener('click', () => {
+        const open = nav.classList.toggle('is-open');
+        navToggle.setAttribute('aria-expanded', String(open));
+      });
+
+      document.getElementById('nav-menu').addEventListener('click', (event) => {
+        if (event.target.closest('a')) {
+          nav.classList.remove('is-open');
+          navToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      async function renderAccount() {
+        const session = await data.getSession().catch(() => null);
+        const container = document.getElementById('nav-account');
+        container.replaceChildren();
+        if (session) {
+          container.append(el('span', 'nav-user', `Hi, ${session.fullName.split(' ')[0]}`));
+          const logout = el('button', 'btn btn-outline btn-sm', 'Log out');
+          logout.type = 'button';
+          logout.addEventListener('click', async () => {
+            await data.logout();
+            await refreshAccount();
+            location.hash = '#/home';
+          });
+          container.append(logout);
+        } else {
+          const login = el('a', 'btn btn-outline btn-sm', 'Log in');
+          login.href = '#/login';
+          const signup = el('a', 'btn btn-primary btn-sm', 'Sign up');
+          signup.href = '#/register';
+          container.append(login, signup);
+        }
+      }
+
+      async function refreshAccount() {
+        await renderAccount();
+        await renderComposer();
+      }
+
+      function showPage() {
+        const name = location.hash.replace(/^#\/?/, '');
+        const page = PAGES.includes(name) ? name : 'home';
+        document.querySelectorAll('section[data-page]').forEach((section) => {
+          section.hidden = section.dataset.page !== page;
+        });
+        document.querySelectorAll('.nav-link').forEach((link) => {
+          link.classList.toggle('is-active', link.dataset.link === page);
+        });
+        if (page === 'comments') loadComments();
+        if (page === 'statistics') renderStatistics();
+        window.scrollTo({ top: 0 });
+      }
+
+      window.addEventListener('hashchange', showPage);
+
+      // Statistics dashboard
+      const numberFormat = new Intl.NumberFormat();
+      const compactFormat = new Intl.NumberFormat(undefined, { notation: 'compact', maximumFractionDigits: 1 });
+
+      function renderStatistics() {
+        const cards = document.getElementById('stat-cards');
+        cards.replaceChildren(...SAMPLE_STATS.totals.map((item) => {
+          const card = el('article', `stat-card ${item.tone}`.trim());
+          card.append(el('span', 'stat-label', item.label), el('strong', 'stat-value', numberFormat.format(item.value)));
+          return card;
+        }));
+
+        const max = Math.max(...SAMPLE_STATS.weekly.map((item) => item.cases));
+        const chart = document.getElementById('weekly-chart');
+        chart.replaceChildren(...SAMPLE_STATS.weekly.map((item) => {
+          const column = el('div', 'bar-col');
+          const bar = el('div', 'bar');
+          bar.style.height = `${Math.round((item.cases / max) * 100)}%`;
+          bar.title = `${item.week}: ${numberFormat.format(item.cases)} cases`;
+          column.append(el('span', 'bar-value', compactFormat.format(item.cases)), bar, el('span', 'bar-label', item.week.replace('Week ', 'W')));
+          return column;
+        }));
+
+        document.getElementById('region-rows').replaceChildren(...SAMPLE_STATS.regions.map((region) => {
+          const row = document.createElement('tr');
+          const name = el('th', null, region.name);
+          name.scope = 'row';
+          const progress = el('div', 'progress');
+          progress.setAttribute('role', 'img');
+          progress.setAttribute('aria-label', `${region.vaccinated}% vaccinated`);
+          const fill = document.createElement('span');
+          fill.style.width = `${region.vaccinated}%`;
+          progress.append(fill);
+          const vaccinated = el('td');
+          vaccinated.append(progress, el('span', 'note', `${region.vaccinated}%`));
+          row.append(name, el('td', null, numberFormat.format(region.cases)), el('td', null, numberFormat.format(region.deaths)), vaccinated);
+          return row;
+        }));
+      }
+
+      // Symptom checker (interactive)
+      document.getElementById('symptom-checker').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const checked = [...event.currentTarget.querySelectorAll('input[name="symptom"]:checked')];
+        const result = document.getElementById('checker-result');
+        const score = checked.reduce((total, box) => total + Number(box.value), 0);
+        if (checked.length === 0) {
+          result.textContent = 'No symptoms selected. Keep following prevention steps and monitor how you feel.';
+        } else if (score >= 4) {
+          result.textContent = 'Several symptoms selected. Stay home, get tested, and contact a healthcare provider.';
+        } else {
+          result.textContent = 'Mild symptoms selected. Rest, stay away from others, and consider testing.';
+        }
+      });
+
+      // Comments
+      const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+
+      function commentNode(comment) {
+        const item = el('li', 'comment');
+        const meta = el('div', 'comment-meta');
+        const time = el('time', null, dateFormat.format(new Date(comment.createdAt)));
+        time.dateTime = comment.createdAt;
+        meta.append(el('strong', null, comment.fullName), time);
+        item.append(meta, el('p', null, comment.body));
+        return item;
+      }
+
+      async function loadComments() {
+        const list = document.getElementById('comment-list');
+        list.replaceChildren(el('p', 'note', 'Loading comments...'));
+        try {
+          const comments = await data.listComments();
+          if (comments.length === 0) {
+            list.replaceChildren(el('p', 'note', 'No comments yet. Be the first to start the conversation.'));
+            return;
+          }
+          const ul = el('ul', 'comment-list');
+          ul.append(...comments.map(commentNode));
+          list.replaceChildren(ul);
+        } catch {
+          list.replaceChildren(el('div', 'notice notice-error', 'Comments could not be loaded right now. Please refresh the page.'));
+        }
+      }
+
+      async function renderComposer() {
+        const session = await data.getSession().catch(() => null);
+        const composer = document.getElementById('composer');
+        if (!session) {
+          composer.innerHTML = '';
+          const box = el('div', 'callout');
+          box.append(el('h2', null, 'Join the conversation'));
+          const p = el('p');
+          p.innerHTML = '<a href="#/login">Log in</a> or <a href="#/register">create an account</a> to share a comment.';
+          box.append(p);
+          composer.append(box);
+          return;
+        }
+        composer.innerHTML = `
+          <form id="comment-form" class="form-card" novalidate>
+            <h2>Share a comment</h2>
+            <div class="field">
+              <label for="comment-body">Your comment</label>
+              <textarea id="comment-body" name="comment" rows="4"></textarea>
+              <span class="field-error" data-error-for="comment"></span>
+            </div>
+            <p class="form-status" role="alert"></p>
+            <button type="submit" class="btn btn-primary">Post comment</button>
+          </form>`;
+        const form = composer.querySelector('#comment-form');
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const body = form.elements.comment.value.trim();
+          const errors = validate({ comment: body });
+          showFieldErrors(form, errors);
+          if (errors.comment) {
+            setStatus(form, 'Please correct the highlighted field.');
+            return;
+          }
+          const button = form.querySelector('button[type="submit"]');
+          setBusy(button, true);
+          try {
+            await data.addComment(body);
+            form.reset();
+            setStatus(form, 'Thanks for sharing your comment!', 'success');
+            await loadComments();
+          } catch (error) {
+            setStatus(form, error.message);
+          } finally {
+            setBusy(button, false);
+          }
+        });
+      }
+
+      // Contact form
+      document.getElementById('contact-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const values = {
+          fullName: form.elements.fullName.value.trim(),
+          email: normalizeEmail(form.elements.email.value),
+          message: form.elements.message.value.trim(),
+        };
+        const errors = validate(values);
+        showFieldErrors(form, errors);
+        if (Object.keys(errors).length > 0) {
+          setStatus(form, 'Please correct the highlighted fields.');
+          return;
+        }
+        const button = form.querySelector('button[type="submit"]');
+        setBusy(button, true);
+        try {
+          await data.sendContact(values);
+          form.reset();
+          setStatus(form, 'Thank you! Your message has been sent.', 'success');
+        } catch (error) {
+          setStatus(form, error.message);
+        } finally {
+          setBusy(button, false);
+        }
+      });
+
+      // Login form
+      document.getElementById('login-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const values = {
+          email: normalizeEmail(form.elements.email.value),
+          password: form.elements.password.value,
+        };
+        const errors = validate({ email: values.email });
+        if (!values.password) errors.password = 'Enter your password.';
+        showFieldErrors(form, errors);
+        if (Object.keys(errors).length > 0) {
+          setStatus(form, 'Please check the highlighted fields.');
+          return;
+        }
+        const button = form.querySelector('button[type="submit"]');
+        setBusy(button, true);
+        try {
+          await data.login(values);
+          form.reset();
+          await refreshAccount();
+          location.hash = '#/comments';
+        } catch (error) {
+          setStatus(form, error.message);
+        } finally {
+          setBusy(button, false);
+        }
+      });
+
+      // Registration form
+      document.getElementById('register-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const values = {
+          fullName: form.elements.fullName.value.trim(),
+          email: normalizeEmail(form.elements.email.value),
+          mobile: normalizeMobile(form.elements.mobile.value.trim()),
+          password: form.elements.password.value,
+        };
+        const errors = validate(values);
+        if (form.elements.confirmPassword.value !== values.password) {
+          errors.confirmPassword = 'Passwords do not match.';
+        }
+        showFieldErrors(form, errors);
+        if (Object.keys(errors).length > 0) {
+          setStatus(form, 'Please correct the highlighted fields.');
+          return;
+        }
+        const button = form.querySelector('button[type="submit"]');
+        setBusy(button, true);
+        try {
+          await data.register(values);
+          form.reset();
+          await refreshAccount();
+          location.hash = '#/comments';
+        } catch (error) {
+          setStatus(form, error.message);
+        } finally {
+          setBusy(button, false);
+        }
+      });
+
+      // Start
+      if (!location.hash) location.hash = '#/home';
+      showPage();
+      refreshAccount();
+    </script>
+  </body>
+</html>
